@@ -1,5 +1,5 @@
 android {
-    buildToolsVersion "23.0.2"
+    buildToolsVersion "23.0.3"
     compileSdkVersion 23
     sourceSets {
         main {
@@ -15,7 +15,7 @@ android {
         instrumentTest.setRoot('tests')
     }
     defaultConfig {
-        applicationId "com.ck.snake"
+        applicationId "com.ad340.project_snake"
         minSdkVersion 8
         targetSdkVersion 23
     }
@@ -68,7 +68,7 @@ task run(type: Exec) {
     }
 
     def adb = path + "/platform-tools/adb"
-    commandLine "$adb", 'shell', 'am', 'start', '-n', 'com.ck.snake/com.ck.snake.AndroidLauncher'
+    commandLine "$adb", 'shell', 'am', 'start', '-n', 'com.ad340.project_snake/com.ad340.project_snake.AndroidLauncher'
 }
 
 // sets up the Android Eclipse project, using the old Ant based build.

@@ -1,8 +1,8 @@
-package com.ck.snake.desktop;
+package com.ad340.project_snake.desktop;
 
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
-import com.ck.snake.ProjectSnake;
+import com.ad340.project_snake.ProjectSnake;
 
 public class DesktopLauncher {
 	public static void main (String[] arg) {

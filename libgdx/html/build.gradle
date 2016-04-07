@@ -7,8 +7,8 @@ gwt {
     minHeapSize="1G"
 
     src = files(file("src/")) // Needs to be in front of "modules" below.
-    modules 'com.ck.snake.GdxDefinition'
-    devModules 'com.ck.snake.GdxDefinitionSuperdev'
+    modules 'com.ad340.project_snake.GdxDefinition'
+    devModules 'com.ad340.project_snake.GdxDefinitionSuperdev'
     project.webAppDirName = 'webapp'
 
     compiler {

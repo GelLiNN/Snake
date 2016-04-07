@@ -1,4 +1,4 @@
-package com.ck.snake;
+package com.ad340.project_snake;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;

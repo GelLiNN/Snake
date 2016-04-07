@@ -1,11 +1,11 @@
-package com.ck.snake;
+package com.ad340.project_snake;
 
 import org.robovm.apple.foundation.NSAutoreleasePool;
 import org.robovm.apple.uikit.UIApplication;
 
 import com.badlogic.gdx.backends.iosrobovm.IOSApplication;
 import com.badlogic.gdx.backends.iosrobovm.IOSApplicationConfiguration;
-import com.ck.snake.ProjectSnake;
+import com.ad340.project_snake.ProjectSnake;
 
 public class IOSLauncher extends IOSApplication.Delegate {
     @Override

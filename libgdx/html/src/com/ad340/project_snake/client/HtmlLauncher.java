@@ -1,9 +1,9 @@
-package com.ck.snake.client;
+package com.ad340.project_snake.client;
 
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.backends.gwt.GwtApplication;
 import com.badlogic.gdx.backends.gwt.GwtApplicationConfiguration;
-import com.ck.snake.ProjectSnake;
+import com.ad340.project_snake.ProjectSnake;
 
 public class HtmlLauncher extends GwtApplication {
 
