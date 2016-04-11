@@ -7,8 +7,11 @@ import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
 import com.ad340.project_snake.ProjectSnake;
 
 public class AndroidLauncher extends AndroidApplication {
+
 	@Override
 	protected void onCreate (Bundle savedInstanceState) {
+
+		// came out of project generation
 		super.onCreate(savedInstanceState);
 		AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
 		initialize(new ProjectSnake(), config);
