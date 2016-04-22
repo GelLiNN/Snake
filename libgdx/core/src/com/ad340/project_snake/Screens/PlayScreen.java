@@ -53,6 +53,7 @@ public class PlayScreen implements Screen {
 
     //Snake
     private Snake snake;
+    public static final float SNAKE_SPEED = 100f;
 
     public PlayScreen(ProjectSnake game) {
         this.game = game;
@@ -115,7 +116,7 @@ public class PlayScreen implements Screen {
                 //manipulate the snake tile in the map
                 System.out.println("swiped up");
                 snake.b2body.setLinearVelocity(0, 0);
-                snake.b2body.applyLinearImpulse(new Vector2(0, 100f), snake.b2body.getWorldCenter(), true);
+                snake.b2body.applyLinearImpulse(new Vector2(0, SNAKE_SPEED), snake.b2body.getWorldCenter(), true);
                 // todo: change direction of the head of snake to moving upwards, unless it's moving down
             }
 
@@ -124,7 +125,7 @@ public class PlayScreen implements Screen {
                 //manipulate the snake tile in the map
                 System.out.println("swiped right");
                 snake.b2body.setLinearVelocity(0, 0);
-                snake.b2body.applyLinearImpulse(new Vector2(100f, 0), snake.b2body.getWorldCenter(), true);
+                snake.b2body.applyLinearImpulse(new Vector2(SNAKE_SPEED, 0), snake.b2body.getWorldCenter(), true);
                 // change direction of the head of snake to moving right, unless it's moving left
             }
 
@@ -133,7 +134,7 @@ public class PlayScreen implements Screen {
                 //manipulate the snake tile in the map
                 System.out.println("swiped left");
                 snake.b2body.setLinearVelocity(0, 0);
-                snake.b2body.applyLinearImpulse(new Vector2(-100f, 0), snake.b2body.getWorldCenter(), true);
+                snake.b2body.applyLinearImpulse(new Vector2(-1 * SNAKE_SPEED, 0), snake.b2body.getWorldCenter(), true);
                 // change direction of the head of snake to moving left, unless it's moving right
             }
 
@@ -142,7 +143,7 @@ public class PlayScreen implements Screen {
                 //manipulate the snake tile in the map
                 System.out.println("swiped down");
                 snake.b2body.setLinearVelocity(0, 0);
-                snake.b2body.applyLinearImpulse(new Vector2(0, -100f), snake.b2body.getWorldCenter(), true);
+                snake.b2body.applyLinearImpulse(new Vector2(0, -1 * SNAKE_SPEED), snake.b2body.getWorldCenter(), true);
                 // change direction of the head of snake to moving down, unless it's moving up
             }
         }));
