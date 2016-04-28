@@ -4,28 +4,19 @@ import com.ad340.project_snake.ProjectSnake;
 import com.ad340.project_snake.Scenes.Hud;
 import com.ad340.project_snake.Sprites.Snake;
 import com.ad340.project_snake.SwipeGestureDetector;
+import com.ad340.project_snake.Utils.B2WorldCreator;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.maps.MapLayer;
-import com.badlogic.gdx.maps.MapObject;
-import com.badlogic.gdx.maps.MapObjects;
-import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTile;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
-import com.badlogic.gdx.physics.box2d.FixtureDef;
-import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 /**
@@ -74,39 +65,11 @@ public class PlayScreen implements Screen {
         // box2d world for physics simulations
         world = new World(new Vector2(0, 0), true);
         b2dr = new Box2DDebugRenderer();
-        BodyDef bdef = new BodyDef();
-        PolygonShape shape = new PolygonShape();
-        FixtureDef fdef = new FixtureDef();
-        Body body;
+
+        new B2WorldCreator(world, map);
 
         // define the snake and add to the world
-        snake = new Snake(this.world);
-
-        // get boundary fixtures from layer 1 "boundaries" layer
-        for (MapObject object : map.getLayers().get(1).getObjects().getByType(RectangleMapObject.class)) {
-            Rectangle rect = ((RectangleMapObject) object).getRectangle();
-
-            bdef.type = BodyDef.BodyType.StaticBody;
-            bdef.position.set(rect.getX() + rect.getWidth() / 2, rect.getY() + rect.getHeight() / 2);
-
-            body = world.createBody(bdef);
-            shape.setAsBox(rect.getWidth() / 2, rect.getHeight() / 2);
-            fdef.shape = shape;
-            body.createFixture(fdef);
-        }
-
-        // get food fixtures from layer 2 "food" layer
-        for (MapObject object : map.getLayers().get(2).getObjects().getByType(RectangleMapObject.class)) {
-            Rectangle rect = ((RectangleMapObject) object).getRectangle();
-
-            bdef.type = BodyDef.BodyType.StaticBody;
-            bdef.position.set(rect.getX() + rect.getWidth() / 2, rect.getY() + rect.getHeight() / 2);
-
-            body = world.createBody(bdef);
-            shape.setAsBox(rect.getWidth() / 2, rect.getHeight() / 2);
-            fdef.shape = shape;
-            body.createFixture(fdef);
-        }
+        snake = new Snake(world, this);
 
         // setup gestures
         Gdx.input.setInputProcessor(new SwipeGestureDetector(new SwipeGestureDetector.DirectionListener() {
@@ -149,8 +112,8 @@ public class PlayScreen implements Screen {
         }));
     }
 
-    @Override
-    public void show() {
+        @Override
+    public void show () {
 
     }
 
@@ -163,22 +126,32 @@ public class PlayScreen implements Screen {
         handleInput(dt);
 
         world.step(1/60f, 6, 2);
-
+        snake.update(dt);
         gameCam.update();
         renderer.setView(gameCam);
     }
 
     @Override
     public void render(float delta) {
+        // seperate our update logic from render
         update(delta);
 
-        Gdx.gl.glClearColor(0, 0, 0, 0);
+        // clear game screen with black
+        Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
+        // render our game map
         renderer.render();
+
         //gives us box2d debug lines
         b2dr.render(world, gameCam.combined);
 
+        game.batch.setProjectionMatrix(gameCam.combined);
+        game.batch.begin();
+        snake.draw(game.batch);
+        game.batch.end();
+
+        //set our batch to draw what the Hud camera sees
         game.batch.setProjectionMatrix(hud.stage.getCamera().combined);
         hud.stage.draw();
     }
@@ -205,6 +178,10 @@ public class PlayScreen implements Screen {
 
     @Override
     public void dispose() {
-
+        world.dispose();
+        map.dispose();
+        renderer.dispose();
+        b2dr.dispose();
+        hud.dispose();
     }
 }
