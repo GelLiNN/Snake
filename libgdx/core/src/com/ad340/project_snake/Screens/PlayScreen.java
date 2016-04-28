@@ -44,7 +44,6 @@ public class PlayScreen implements Screen {
 
     //Snake
     private Snake snake;
-    public static final float SNAKE_SPEED = 100f;
 
     public PlayScreen(ProjectSnake game) {
         this.game = game;
@@ -70,46 +69,6 @@ public class PlayScreen implements Screen {
 
         // define the snake and add to the world
         snake = new Snake(world, this);
-
-        // setup gestures
-        Gdx.input.setInputProcessor(new SwipeGestureDetector(new SwipeGestureDetector.DirectionListener() {
-
-            @Override
-            public void onUp() {
-                //manipulate the snake tile in the map
-                System.out.println("swiped up");
-                snake.b2body.setLinearVelocity(0, 0);
-                snake.b2body.applyLinearImpulse(new Vector2(0, SNAKE_SPEED), snake.b2body.getWorldCenter(), true);
-                // todo: change direction of the head of snake to moving upwards, unless it's moving down
-            }
-
-            @Override
-            public void onRight() {
-                //manipulate the snake tile in the map
-                System.out.println("swiped right");
-                snake.b2body.setLinearVelocity(0, 0);
-                snake.b2body.applyLinearImpulse(new Vector2(SNAKE_SPEED, 0), snake.b2body.getWorldCenter(), true);
-                // change direction of the head of snake to moving right, unless it's moving left
-            }
-
-            @Override
-            public void onLeft() {
-                //manipulate the snake tile in the map
-                System.out.println("swiped left");
-                snake.b2body.setLinearVelocity(0, 0);
-                snake.b2body.applyLinearImpulse(new Vector2(-1 * SNAKE_SPEED, 0), snake.b2body.getWorldCenter(), true);
-                // change direction of the head of snake to moving left, unless it's moving right
-            }
-
-            @Override
-            public void onDown() {
-                //manipulate the snake tile in the map
-                System.out.println("swiped down");
-                snake.b2body.setLinearVelocity(0, 0);
-                snake.b2body.applyLinearImpulse(new Vector2(0, -1 * SNAKE_SPEED), snake.b2body.getWorldCenter(), true);
-                // change direction of the head of snake to moving down, unless it's moving up
-            }
-        }));
     }
 
         @Override

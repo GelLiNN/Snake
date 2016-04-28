@@ -14,7 +14,7 @@ import com.badlogic.gdx.physics.box2d.World;
 public class B2WorldCreator {
     public B2WorldCreator(World world, TiledMap map) {
         // get boundary fixtures from layer 1 "boundaries" layer
-        for (MapObject object : map.getLayers().get(1).getObjects().getByType(RectangleMapObject.class)) {
+        for (MapObject object : map.getLayers().get(4).getObjects().getByType(RectangleMapObject.class)) {
             Rectangle bounds = ((RectangleMapObject) object).getRectangle();
 
             new Boundary(world, map, bounds);
