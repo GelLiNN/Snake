@@ -7,12 +7,15 @@ import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.World;
 
+import java.util.List;
+
 /**
  * Created by MasterOfTheUniverse on 4/21/16.
  */
 public class Snake extends Sprite {
     public World world;
     public Body b2body;
+    public List<Snake> children;
 
     public Snake(World world) {
         this.world = world;
