@@ -51,7 +51,7 @@ public class PlayScreen implements Screen {
 
         // camera
         gameCam = new OrthographicCamera();
-        gamePort = new FitViewport(ProjectSnake.V_WIDTH, ProjectSnake.V_HEIGHT, gameCam);
+        gamePort = new FitViewport(ProjectSnake.V_WIDTH / ProjectSnake.PPM, ProjectSnake.V_HEIGHT / ProjectSnake.PPM, gameCam);
 
         // hud
         hud = new Hud(game.batch);
@@ -59,7 +59,7 @@ public class PlayScreen implements Screen {
         // map
         maploader = new TmxMapLoader();
         map = maploader.load("Level1.tmx");
-        renderer = new OrthogonalTiledMapRenderer(map);
+        renderer = new OrthogonalTiledMapRenderer(map, 1/ ProjectSnake.PPM);
         gameCam.position.set(gamePort.getWorldWidth() / 2, gamePort.getWorldHeight() / 2, 0);
 
         // box2d world for physics simulations

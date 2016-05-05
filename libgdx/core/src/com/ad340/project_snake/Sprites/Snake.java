@@ -20,7 +20,7 @@ import java.util.List;
  */
 public class Snake extends Sprite {
     // constants
-    public static final float SNAKE_SPEED = 200f;
+    public static final float SNAKE_SPEED = 3f;
     public static final int SNAKE_FIXTURE_RADIUS = 10;
 
     // other snake data
@@ -43,14 +43,14 @@ public class Snake extends Sprite {
     public void defineSnake() {
         // create a body definition for box2d
         BodyDef bdef = new BodyDef();
-        bdef.position.set(200, 200);
+        bdef.position.set(200/ ProjectSnake.PPM, 200/ ProjectSnake.PPM);
         bdef.type = BodyDef.BodyType.DynamicBody;
         b2body = world.createBody(bdef);
 
         // create a fixture definition for box2d
         FixtureDef fdef = new FixtureDef();
         CircleShape shape = new CircleShape();
-        shape.setRadius(SNAKE_FIXTURE_RADIUS);
+        shape.setRadius(SNAKE_FIXTURE_RADIUS / ProjectSnake.PPM);
         fdef.shape = shape;
         b2body.createFixture(fdef);
     }

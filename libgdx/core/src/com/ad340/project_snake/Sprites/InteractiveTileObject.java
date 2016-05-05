@@ -1,5 +1,6 @@
 package com.ad340.project_snake.Sprites;
 
+import com.ad340.project_snake.ProjectSnake;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTile;
 import com.badlogic.gdx.math.Rectangle;
@@ -31,10 +32,10 @@ public abstract class InteractiveTileObject {
         PolygonShape shape = new PolygonShape();
 
         bdef.type = BodyDef.BodyType.StaticBody;
-        bdef.position.set(bounds.getX() + bounds.getWidth() / 2, bounds.getY() + bounds.getHeight() / 2);
+        bdef.position.set((bounds.getX() + bounds.getWidth() / 2)/ ProjectSnake.PPM, (bounds.getY() + bounds.getHeight() / 2)/ ProjectSnake.PPM);
 
         body = world.createBody(bdef);
-        shape.setAsBox(bounds.getWidth() / 2, bounds.getHeight() / 2);
+        shape.setAsBox((bounds.getWidth() / 2) / ProjectSnake.PPM, (bounds.getHeight() / 2)/ ProjectSnake.PPM);
         fdef.shape = shape;
         body.createFixture(fdef);
     }
