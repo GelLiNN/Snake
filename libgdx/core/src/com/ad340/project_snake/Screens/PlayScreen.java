@@ -3,9 +3,9 @@ package com.ad340.project_snake.Screens;
 import com.ad340.project_snake.ProjectSnake;
 import com.ad340.project_snake.Scenes.Hud;
 import com.ad340.project_snake.Sprites.Snake;
-import com.ad340.project_snake.SwipeGestureDetector;
 import com.ad340.project_snake.Utils.B2WorldCreator;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -69,7 +69,7 @@ public class PlayScreen implements Screen {
         new B2WorldCreator(world, map);
 
         // define the snake and add to the world
-        snake = new Snake(world, this);
+        snake = new Snake(world);
     }
 
     @Override

@@ -1,18 +1,13 @@
 package com.ad340.project_snake.Sprites;
 
 import com.ad340.project_snake.ProjectSnake;
-import com.ad340.project_snake.Screens.PlayScreen;
 import com.ad340.project_snake.SwipeGestureDetector;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.physics.box2d.CircleShape;
-import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.utils.Timer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,21 +21,83 @@ public class Snake {
 
     // constants
     public static final float SNAKE_SPEED = 3f;
+    public static final Vector2 STARTING_POS = new Vector2(200, 200);
+    public static final Vector2 STARTING_VEL = new Vector2(0, SNAKE_SPEED);
 
     // state
-    public List<SnakePiece> snakePieces;
+    private World world;
+    private List<SnakePiece> snakePieces;
+    private Pair<Vector2, Vector2> ghost;
+    Pair<Vector2, Vector2> currentGhost;
 
-    public Snake(World world, PlayScreen screen) {
+    boolean isWaitingToAdd = false;
+
+    public Snake(World world) {
+        this.world = world;
+
+        // setup the snake
+        SnakePiece head = new SnakePiece(world, STARTING_POS, STARTING_VEL);
         snakePieces = new ArrayList<SnakePiece>();
-
-        SnakePiece head = new SnakePiece(world, screen);
         snakePieces.add(head);
-
         setupGestures();
     }
 
+    public void addToSnake() {
+        if (isWaitingToAdd) {
+            currentGhost = ghost;
+        }
+        float delay = 1; // seconds
+
+        Timer.schedule(new Timer.Task() {
+            @Override
+            public void run() {
+                // Do your work
+                SnakePiece newTail = new SnakePiece(world, currentGhost.getKey() /* should be something else */,
+                        currentGhost.getValue());
+                snakePieces.add(newTail);
+                isWaitingToAdd = false;
+
+                System.out.println("waited delay :)");
+            }
+        }, delay);
+
+        System.out.println("added to snake");
+    }
+
+    /**
+     * Update all the snakepieces in this snake with the same dt
+     * @param dt
+     */
+    public void update(float dt) {
+        for (SnakePiece piece : snakePieces) {
+            piece.update(dt);
+        }
+
+        updateGhost();
+
+        if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
+            isWaitingToAdd = true;
+            addToSnake();
+        }
+    }
+
+    private void updateGhost() {
+        SnakePiece tail = snakePieces.get(snakePieces.size() - 1);
+        Vector2 ghostPosition = tail.b2body.getWorldCenter();
+        ghostPosition.x *= ProjectSnake.PPM;
+        ghostPosition.y *= ProjectSnake.PPM;
+        Vector2 ghostVelocity = tail.b2body.getLinearVelocity();
+        this.ghost = new Pair<Vector2, Vector2>(ghostPosition, ghostVelocity);
+    }
+
+    public void draw(SpriteBatch batch) {
+        for (SnakePiece piece : snakePieces) {
+            piece.draw(batch);
+        }
+    }
+
     public void setupGestures() {
-        // setup gestures
+        // setup swipe gestures
         Gdx.input.setInputProcessor(new SwipeGestureDetector(new SwipeGestureDetector.DirectionListener() {
 
             @Override
@@ -103,21 +160,5 @@ public class Snake {
                 System.out.println("swiped down");
             }
         }));
-    }
-
-    /**
-     * Update all the snakepieces in this snake with the same dt
-     * @param dt
-     */
-    public void update(float dt) {
-        for (SnakePiece piece : snakePieces) {
-            piece.update(dt);
-        }
-    }
-
-    public void draw(SpriteBatch batch) {
-        for (SnakePiece piece : snakePieces) {
-            piece.draw(batch);
-        }
     }
 }

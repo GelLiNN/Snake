@@ -31,42 +31,48 @@ public class SnakePiece extends Sprite {
     public World world;
     public Body b2body;
 
-    public SnakePiece(World world, PlayScreen screen) {
+    public SnakePiece(World world, Vector2 position, Vector2 velocity) {
         super(new Texture("snake-sprite.png"));
         pivots = new LinkedList<Pair<Vector2, Vector2>>();
         this.world = world;
-        defineSnake();
+        defineSnakePiece(position, velocity);
         setBounds(0, 0, 32 / ProjectSnake.PPM, 32 / ProjectSnake.PPM);
     }
 
     public void update(float dt) {
+        Vector2 thisPos = this.b2body.getWorldCenter();
+
         // setting the sprite to the position of the box2d body
-        setPosition(b2body.getPosition().x - getWidth() / 2, b2body.getPosition().y - getHeight() / 2);
+        setPosition(thisPos.x - getWidth() / 2, thisPos.y - getHeight() / 2);
+
+        // check pivots
         if (!pivots.isEmpty()) {
-            Vector2 thisPos = this.b2body.getWorldCenter();
             Pair<Vector2, Vector2> nextPivot = pivots.peek();
 
             if (nextPivot.getKey().epsilonEquals(thisPos, 0)) {
                 nextPivot = pivots.remove();
-                b2body.setLinearVelocity(0, 0);
-                b2body.applyLinearImpulse(nextPivot.getValue(), this.b2body.getWorldCenter(), true);
+                this.b2body.setLinearVelocity(0, 0);
+                this.b2body.applyLinearImpulse(nextPivot.getValue(), this.b2body.getWorldCenter(), true);
             }
         }
     }
 
-    public void defineSnake() {
+    public void defineSnakePiece(Vector2 position, Vector2 velocity) {
         // create a body definition for box2d
         BodyDef bdef = new BodyDef();
-        bdef.position.set(200/ ProjectSnake.PPM, 200/ ProjectSnake.PPM);
+        bdef.position.set(position.x / ProjectSnake.PPM, position.y / ProjectSnake.PPM);
         bdef.type = BodyDef.BodyType.DynamicBody;
-        b2body = world.createBody(bdef);
+        this.b2body = world.createBody(bdef);
 
         // create a fixture definition for box2d
         FixtureDef fdef = new FixtureDef();
         CircleShape shape = new CircleShape();
         shape.setRadius(SNAKE_FIXTURE_RADIUS / ProjectSnake.PPM);
         fdef.shape = shape;
-        b2body.createFixture(fdef);
+        this.b2body.createFixture(fdef);
+
+        // start moving the piece
+        this.b2body.applyLinearImpulse(velocity, this.b2body.getWorldCenter(), true);
     }
 
 }
