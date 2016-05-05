@@ -6,6 +6,7 @@ import com.ad340.project_snake.SwipeGestureDetector;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -13,46 +14,29 @@ import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.World;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import javafx.util.Pair;
 
 /**
  * Created by MasterOfTheUniverse on 4/21/16.
  */
-public class Snake extends Sprite {
+public class Snake {
+
     // constants
     public static final float SNAKE_SPEED = 3f;
-    public static final int SNAKE_FIXTURE_RADIUS = 10;
 
-    // other snake data
-    public World world;
-    public Body b2body;
-    public List<Snake> children;
+    // state
+    public List<SnakePiece> snakePieces;
 
     public Snake(World world, PlayScreen screen) {
-        super(new Texture("snake-sprite.png"));
-        this.world = world;
-        defineSnake();
-        setBounds(0, 0, 32 / ProjectSnake.PPM, 32 / ProjectSnake.PPM);
+        snakePieces = new ArrayList<SnakePiece>();
+
+        SnakePiece head = new SnakePiece(world, screen);
+        snakePieces.add(head);
+
         setupGestures();
-    }
-
-    public void update(float dt) {
-        setPosition(b2body.getPosition().x - getWidth() / 2, b2body.getPosition().y - getHeight() / 2);
-    }
-
-    public void defineSnake() {
-        // create a body definition for box2d
-        BodyDef bdef = new BodyDef();
-        bdef.position.set(200/ ProjectSnake.PPM, 200/ ProjectSnake.PPM);
-        bdef.type = BodyDef.BodyType.DynamicBody;
-        b2body = world.createBody(bdef);
-
-        // create a fixture definition for box2d
-        FixtureDef fdef = new FixtureDef();
-        CircleShape shape = new CircleShape();
-        shape.setRadius(SNAKE_FIXTURE_RADIUS / ProjectSnake.PPM);
-        fdef.shape = shape;
-        b2body.createFixture(fdef);
     }
 
     public void setupGestures() {
@@ -61,39 +45,79 @@ public class Snake extends Sprite {
 
             @Override
             public void onUp() {
-                //manipulate the snake tile in the map
+                SnakePiece head = snakePieces.get(0);
+
+                Vector2 position = head.b2body.getWorldCenter();
+                Vector2 velocity = new Vector2(0, SNAKE_SPEED);
+
+                for (SnakePiece piece : snakePieces) {
+                    piece.pivots.add(new Pair(position, velocity));
+                }
+
+                // testing
                 System.out.println("swiped up");
-                b2body.setLinearVelocity(0, 0);
-                b2body.applyLinearImpulse(new Vector2(0, SNAKE_SPEED), b2body.getWorldCenter(), true);
-                // todo: change direction of the head of snake to moving upwards, unless it's moving down
             }
 
             @Override
             public void onRight() {
-                //manipulate the snake tile in the map
+                SnakePiece head = snakePieces.get(0);
+
+                Vector2 position = head.b2body.getWorldCenter();
+                Vector2 velocity = new Vector2(SNAKE_SPEED, 0);
+
+                for (SnakePiece piece : snakePieces) {
+                    piece.pivots.add(new Pair(position, velocity));
+                }
+
+                // testing
                 System.out.println("swiped right");
-                b2body.setLinearVelocity(0, 0);
-                b2body.applyLinearImpulse(new Vector2(SNAKE_SPEED, 0), b2body.getWorldCenter(), true);
-                // change direction of the head of snake to moving right, unless it's moving left
             }
 
             @Override
             public void onLeft() {
-                //manipulate the snake tile in the map
+                SnakePiece head = snakePieces.get(0);
+
+                Vector2 position = head.b2body.getWorldCenter();
+                Vector2 velocity = new Vector2(-1 * SNAKE_SPEED, 0);
+
+                for (SnakePiece piece : snakePieces) {
+                    piece.pivots.add(new Pair(position, velocity));
+                }
+
+                // testing
                 System.out.println("swiped left");
-                b2body.setLinearVelocity(0, 0);
-                b2body.applyLinearImpulse(new Vector2(-1 * SNAKE_SPEED, 0), b2body.getWorldCenter(), true);
-                // change direction of the head of snake to moving left, unless it's moving right
             }
 
             @Override
             public void onDown() {
-                //manipulate the snake tile in the map
+                SnakePiece head = snakePieces.get(0);
+
+                Vector2 position = head.b2body.getWorldCenter();
+                Vector2 velocity = new Vector2(0, -1 * SNAKE_SPEED);
+
+                for (SnakePiece piece : snakePieces) {
+                    piece.pivots.add(new Pair(position, velocity));
+                }
+
+                // testing
                 System.out.println("swiped down");
-                b2body.setLinearVelocity(0, 0);
-                b2body.applyLinearImpulse(new Vector2(0, -1 * SNAKE_SPEED), b2body.getWorldCenter(), true);
-                // change direction of the head of snake to moving down, unless it's moving up
             }
         }));
+    }
+
+    /**
+     * Update all the snakepieces in this snake with the same dt
+     * @param dt
+     */
+    public void update(float dt) {
+        for (SnakePiece piece : snakePieces) {
+            piece.update(dt);
+        }
+    }
+
+    public void draw(SpriteBatch batch) {
+        for (SnakePiece piece : snakePieces) {
+            piece.draw(batch);
+        }
     }
 }
