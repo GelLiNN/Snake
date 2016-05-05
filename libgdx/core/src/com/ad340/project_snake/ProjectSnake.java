@@ -6,6 +6,9 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.ad340.project_snake.Screens.PlayScreen;
 
+/**
+ * Created by Kellan on 4/10/2016.
+ */
 public class ProjectSnake extends Game {
 
 	// Game constants

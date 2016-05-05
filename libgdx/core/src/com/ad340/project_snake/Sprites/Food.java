@@ -6,6 +6,7 @@ import com.badlogic.gdx.physics.box2d.World;
 
 /**
  * Created by Tim on 4/27/2016.
+ * Created by Kellan on 4/10/2016.
  */
 public class Food extends InteractiveTileObject {
     public Food(World world, TiledMap map, Rectangle bounds) {

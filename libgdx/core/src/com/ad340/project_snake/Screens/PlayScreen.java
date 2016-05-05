@@ -21,6 +21,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
 /**
  * Created by Tim on 4/10/2016.
+ * Created by Kellan on 4/10/2016.
  */
 public class PlayScreen implements Screen {
 
@@ -71,7 +72,7 @@ public class PlayScreen implements Screen {
         snake = new Snake(world, this);
     }
 
-        @Override
+    @Override
     public void show () {
 
     }

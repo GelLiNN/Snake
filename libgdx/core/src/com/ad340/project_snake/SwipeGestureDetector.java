@@ -1,6 +1,9 @@
 package com.ad340.project_snake;
 import com.badlogic.gdx.input.GestureDetector;
 
+/**
+ * Created by Kellan on 4/10/2016.
+ */
 public class SwipeGestureDetector extends GestureDetector {
     public interface DirectionListener {
         void onLeft();
