@@ -28,7 +28,8 @@ public class Snake {
     private World world;
     private List<SnakePiece> snakePieces;
     private Pair<Vector2, Vector2> ghost;
-    Pair<Vector2, Vector2> currentGhost;
+    Vector2 ghostLocation;
+    Vector2 ghostVelocity;
 
     boolean isWaitingToAdd = false;
 
@@ -43,19 +44,21 @@ public class Snake {
     }
 
     public void addToSnake() {
-        if (isWaitingToAdd) {
-            currentGhost = ghost;
-        }
+        ghostLocation = new Vector2();
+        ghostLocation.x = ghost.getKey().x;
+        ghostLocation.y = ghost.getKey().y;
+        ghostVelocity = new Vector2();
+        ghostVelocity.x = ghost.getValue().x;
+        ghostVelocity.y = ghost.getValue().y;
         float delay = 1; // seconds
 
         Timer.schedule(new Timer.Task() {
             @Override
             public void run() {
                 // Do your work
-                SnakePiece newTail = new SnakePiece(world, currentGhost.getKey() /* should be something else */,
-                        currentGhost.getValue());
+                SnakePiece newTail = new SnakePiece(world, ghostLocation /* should be something else */,
+                        ghostVelocity);
                 snakePieces.add(newTail);
-                isWaitingToAdd = false;
 
                 System.out.println("waited delay :)");
             }
@@ -76,7 +79,6 @@ public class Snake {
         updateGhost();
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
-            isWaitingToAdd = true;
             addToSnake();
         }
     }

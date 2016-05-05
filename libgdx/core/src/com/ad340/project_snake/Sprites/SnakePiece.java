@@ -49,7 +49,7 @@ public class SnakePiece extends Sprite {
         if (!pivots.isEmpty()) {
             Pair<Vector2, Vector2> nextPivot = pivots.peek();
 
-            if (nextPivot.getKey().epsilonEquals(thisPos, 0)) {
+            if (nextPivot.getKey().epsilonEquals(thisPos, 1)) {
                 nextPivot = pivots.remove();
                 this.b2body.setLinearVelocity(0, 0);
                 this.b2body.applyLinearImpulse(nextPivot.getValue(), this.b2body.getWorldCenter(), true);
