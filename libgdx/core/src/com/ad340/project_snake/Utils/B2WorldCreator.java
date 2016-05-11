@@ -20,13 +20,5 @@ public class B2WorldCreator {
 
             new Boundary(world, map, bounds);
         }
-
-        // get food fixtures from layer 2 "food" layer
-        // THIS DOESN'T CURRENTLY DO ANYTHING because layer 2 is not an object layer
-        for (MapObject object : map.getLayers().get(2).getObjects().getByType(RectangleMapObject.class)) {
-            Rectangle bounds = ((RectangleMapObject) object).getRectangle();
-
-            new Food(world, map, bounds);
-        }
     }
 }

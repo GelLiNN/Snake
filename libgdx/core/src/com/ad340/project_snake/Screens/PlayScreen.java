@@ -2,6 +2,7 @@ package com.ad340.project_snake.Screens;
 
 import com.ad340.project_snake.ProjectSnake;
 import com.ad340.project_snake.Scenes.Hud;
+import com.ad340.project_snake.Sprites.Food;
 import com.ad340.project_snake.Sprites.Snake;
 import com.ad340.project_snake.Utils.B2WorldCreator;
 import com.badlogic.gdx.Gdx;
@@ -39,12 +40,16 @@ public class PlayScreen implements Screen {
     private TiledMap map;
     private OrthogonalTiledMapRenderer renderer;
 
-    //Box2d variables
+    // Box2d variables
     private World world;
     private Box2DDebugRenderer b2dr;
 
-    //Snake
+    // Snake
     private Snake snake;
+
+    // Food
+    private Food food;
+    boolean isFoodPresent;
 
     public PlayScreen(ProjectSnake game) {
         this.game = game;
@@ -82,13 +87,14 @@ public class PlayScreen implements Screen {
     }
 
     public void update(float dt) {
-        //handle user input first
+        // handle user input first
         handleInput(dt);
 
         world.step(1/60f, 6, 2);
         snake.update(dt);
         gameCam.update();
         renderer.setView(gameCam);
+
     }
 
     @Override

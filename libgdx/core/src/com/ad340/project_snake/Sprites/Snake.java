@@ -10,6 +10,7 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Timer;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import javafx.util.Pair;
@@ -21,50 +22,77 @@ public class Snake {
 
     // constants
     public static final float SNAKE_SPEED = 3f;
-    public static final Vector2 STARTING_POS = new Vector2(200, 200);
-    public static final Vector2 STARTING_VEL = new Vector2(0, SNAKE_SPEED);
+    public static final Vector2 STARTING_POS = new Vector2(200, 200); // x, y
+    public static final Vector2 STARTING_VEL = new Vector2(0, SNAKE_SPEED); // x-vel, y-vel
 
-    // state
+    // snake state
     private World world;
+    private SnakePiece head; // points to the head
+    private SnakePiece tail; // points to the tail
     private List<SnakePiece> snakePieces;
-    private Pair<Vector2, Vector2> ghost;
-    Vector2 ghostLocation;
-    Vector2 ghostVelocity;
 
-    boolean isWaitingToAdd = false;
+    // add data
+    Vector2 addLocation;
+    Vector2 addVelocity;
 
+    /**
+     * Snake constructor
+     * @param world to place the Snake in
+     */
     public Snake(World world) {
         this.world = world;
 
         // setup the snake
-        SnakePiece head = new SnakePiece(world, STARTING_POS, STARTING_VEL);
+        head = new SnakePiece(world, STARTING_POS, STARTING_VEL);
+        tail = head;
         snakePieces = new ArrayList<SnakePiece>();
         snakePieces.add(head);
+
+        // setup swipe gestures
         setupGestures();
     }
 
+    /**
+     * Adds a SnakePiece to the end of the Snake
+     */
     public void addToSnake() {
-        ghostLocation = new Vector2();
-        ghostLocation.x = ghost.getKey().x;
-        ghostLocation.y = ghost.getKey().y;
-        ghostVelocity = new Vector2();
-        ghostVelocity.x = ghost.getValue().x;
-        ghostVelocity.y = ghost.getValue().y;
-        float delay = 1; // seconds
+        // update location and velocity for new piece that's being spawned
+        updateAddData();
 
-        Timer.schedule(new Timer.Task() {
-            @Override
-            public void run() {
-                // Do your work
-                SnakePiece newTail = new SnakePiece(world, ghostLocation /* should be something else */,
-                        ghostVelocity);
-                snakePieces.add(newTail);
+        Vector2 tailVel = tail.b2body.getLinearVelocity();
+        if (tailVel.x > 0) {
+            addLocation.x -= 35;
+        } else if (tailVel.x < 0) {
+            addLocation.x += 35;
+        } else if (tailVel.y > 0) {
+            addLocation.y -= 35;
+        } else if (tailVel.y < 0) {
+            addLocation.y += 35;
+        }
 
-                System.out.println("waited delay :)");
-            }
-        }, delay);
+        // create a new SnakePiece
+        SnakePiece newTail = new SnakePiece(world, addLocation, addVelocity);
 
-        System.out.println("added to snake");
+        // Give it the tail's current pivots
+        newTail.pivots = new LinkedList<Pair<Vector2, Vector2>>(tail.pivots);
+
+        // Add it to the list of SnakePieces
+        snakePieces.add(newTail);
+
+        // Set it as the new Tail
+        tail = newTail;
+
+        System.out.println("Added to snake");
+    }
+
+    /**
+     * Update location and velocity for new piece that's being spawned
+     */
+    public void updateAddData() {
+        float x = tail.b2body.getWorldCenter().x * ProjectSnake.PPM,
+              y = tail.b2body.getWorldCenter().y * ProjectSnake.PPM;
+        addLocation = new Vector2(x, y);
+        addVelocity = new Vector2(tail.b2body.getLinearVelocity());
     }
 
     /**
@@ -76,90 +104,118 @@ public class Snake {
             piece.update(dt);
         }
 
-        updateGhost();
-
         if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
             addToSnake();
         }
     }
 
-    private void updateGhost() {
-        SnakePiece tail = snakePieces.get(snakePieces.size() - 1);
-        Vector2 ghostPosition = tail.b2body.getWorldCenter();
-        ghostPosition.x *= ProjectSnake.PPM;
-        ghostPosition.y *= ProjectSnake.PPM;
-        Vector2 ghostVelocity = tail.b2body.getLinearVelocity();
-        this.ghost = new Pair<Vector2, Vector2>(ghostPosition, ghostVelocity);
-    }
-
+    /**
+     * Draws the snake pieces every frame
+     * @param batch
+     */
     public void draw(SpriteBatch batch) {
         for (SnakePiece piece : snakePieces) {
             piece.draw(batch);
         }
     }
 
+    /**
+     * Sets up swipe guestures for changing snake directions
+     */
     public void setupGestures() {
         // setup swipe gestures
         Gdx.input.setInputProcessor(new SwipeGestureDetector(new SwipeGestureDetector.DirectionListener() {
 
             @Override
             public void onUp() {
-                SnakePiece head = snakePieces.get(0);
+                float x = head.b2body.getWorldCenter().x * ProjectSnake.PPM,
+                      y = head.b2body.getWorldCenter().y * ProjectSnake.PPM;
+                Vector2 pivotPosition = new Vector2(x, y);
+                Vector2 pivotVelocity = new Vector2(0, SNAKE_SPEED);
 
-                Vector2 position = head.b2body.getWorldCenter();
-                Vector2 velocity = new Vector2(0, SNAKE_SPEED);
+                Vector2 headVel = head.b2body.getLinearVelocity();
 
-                for (SnakePiece piece : snakePieces) {
-                    piece.pivots.add(new Pair(position, velocity));
+                // make sure the snake isn't moving down
+                if (headVel.y >= 0) {
+                    if (headVel.x > 0) {
+                        pivotPosition.x += 5;
+                    } else {
+                        pivotPosition.x -= 5;
+                    }
+
+                    for (SnakePiece piece : snakePieces) {
+                        piece.pivots.add(new Pair(pivotPosition, pivotVelocity));
+                    }
                 }
-
-                // testing
-                System.out.println("swiped up");
             }
 
             @Override
             public void onRight() {
-                SnakePiece head = snakePieces.get(0);
+                float x = head.b2body.getWorldCenter().x * ProjectSnake.PPM,
+                      y = head.b2body.getWorldCenter().y * ProjectSnake.PPM;
+                Vector2 pivotPosition = new Vector2(x, y);
+                Vector2 pivotVelocity = new Vector2(SNAKE_SPEED, 0);
 
-                Vector2 position = head.b2body.getWorldCenter();
-                Vector2 velocity = new Vector2(SNAKE_SPEED, 0);
+                Vector2 headVel = head.b2body.getLinearVelocity();
 
-                for (SnakePiece piece : snakePieces) {
-                    piece.pivots.add(new Pair(position, velocity));
+                // make sure the snake isn't moving left
+                if (headVel.x >= 0) {
+                    if (headVel.y > 0) {
+                        pivotPosition.y += 5;
+                    } else {
+                        pivotPosition.y -= 5;
+                    }
+
+                    for (SnakePiece piece : snakePieces) {
+                        piece.pivots.add(new Pair(pivotPosition, pivotVelocity));
+                    }
                 }
-
-                // testing
-                System.out.println("swiped right");
             }
 
             @Override
             public void onLeft() {
-                SnakePiece head = snakePieces.get(0);
+                float x = head.b2body.getWorldCenter().x * ProjectSnake.PPM,
+                      y = head.b2body.getWorldCenter().y * ProjectSnake.PPM;
+                Vector2 pivotPosition = new Vector2(x, y);
+                Vector2 pivotVelocity = new Vector2(-1 * SNAKE_SPEED, 0);
 
-                Vector2 position = head.b2body.getWorldCenter();
-                Vector2 velocity = new Vector2(-1 * SNAKE_SPEED, 0);
+                Vector2 headVel = head.b2body.getLinearVelocity();
 
-                for (SnakePiece piece : snakePieces) {
-                    piece.pivots.add(new Pair(position, velocity));
+                // make sure the snake isn't moving right
+                if (headVel.x <= 0) {
+                    if (headVel.y > 0) {
+                        pivotPosition.y += 5;
+                    } else {
+                        pivotPosition.y -= 5;
+                    }
+
+                    for (SnakePiece piece : snakePieces) {
+                        piece.pivots.add(new Pair(pivotPosition, pivotVelocity));
+                    }
                 }
-
-                // testing
-                System.out.println("swiped left");
             }
 
             @Override
             public void onDown() {
-                SnakePiece head = snakePieces.get(0);
+                float x = head.b2body.getWorldCenter().x * ProjectSnake.PPM,
+                      y = head.b2body.getWorldCenter().y * ProjectSnake.PPM;
+                Vector2 pivotPosition = new Vector2(x, y);
+                Vector2 pivotVelocity = new Vector2(0, -1 * SNAKE_SPEED);
 
-                Vector2 position = head.b2body.getWorldCenter();
-                Vector2 velocity = new Vector2(0, -1 * SNAKE_SPEED);
+                Vector2 headVel = head.b2body.getLinearVelocity();
 
-                for (SnakePiece piece : snakePieces) {
-                    piece.pivots.add(new Pair(position, velocity));
+                // make sure the snake isn't moving up
+                if (headVel.y <= 0) {
+                    if (headVel.x > 0) {
+                        pivotPosition.x += 5;
+                    } else {
+                        pivotPosition.x -= 5;
+                    }
+
+                    for (SnakePiece piece : snakePieces) {
+                        piece.pivots.add(new Pair(pivotPosition, pivotVelocity));
+                    }
                 }
-
-                // testing
-                System.out.println("swiped down");
             }
         }));
     }
