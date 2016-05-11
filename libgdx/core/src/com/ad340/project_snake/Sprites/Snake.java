@@ -7,7 +7,6 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
-import com.badlogic.gdx.utils.Timer;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -135,8 +134,8 @@ public class Snake {
 
                 Vector2 headVel = head.b2body.getLinearVelocity();
 
-                // make sure the snake isn't moving down
-                if (headVel.y >= 0) {
+                // make sure the snake isn't moving up or down
+                if (headVel.y == 0) {
                     if (headVel.x > 0) {
                         pivotPosition.x += 5;
                     } else {
@@ -158,8 +157,8 @@ public class Snake {
 
                 Vector2 headVel = head.b2body.getLinearVelocity();
 
-                // make sure the snake isn't moving left
-                if (headVel.x >= 0) {
+                // make sure the snake isn't moving right or left
+                if (headVel.x == 0) {
                     if (headVel.y > 0) {
                         pivotPosition.y += 5;
                     } else {
@@ -181,8 +180,8 @@ public class Snake {
 
                 Vector2 headVel = head.b2body.getLinearVelocity();
 
-                // make sure the snake isn't moving right
-                if (headVel.x <= 0) {
+                // make sure the snake isn't moving right or left
+                if (headVel.x == 0) {
                     if (headVel.y > 0) {
                         pivotPosition.y += 5;
                     } else {
@@ -204,8 +203,8 @@ public class Snake {
 
                 Vector2 headVel = head.b2body.getLinearVelocity();
 
-                // make sure the snake isn't moving up
-                if (headVel.y <= 0) {
+                // make sure the snake isn't moving up or down
+                if (headVel.y == 0) {
                     if (headVel.x > 0) {
                         pivotPosition.x += 5;
                     } else {

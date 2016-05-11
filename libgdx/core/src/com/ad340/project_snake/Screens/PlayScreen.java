@@ -6,17 +6,16 @@ import com.ad340.project_snake.Sprites.Food;
 import com.ad340.project_snake.Sprites.Snake;
 import com.ad340.project_snake.Utils.B2WorldCreator;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.maps.tiled.TiledMap;
-import com.badlogic.gdx.maps.tiled.TiledMapTile;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
@@ -83,14 +82,16 @@ public class PlayScreen implements Screen {
     }
 
     public void handleInput(float dt) {
-        TiledMapTile snake;
+        if (Gdx.input.justTouched()) {
+            snake.addToSnake();
+        }
     }
 
     public void update(float dt) {
         // handle user input first
         handleInput(dt);
 
-        world.step(1/60f, 6, 2);
+        world.step(1 / 60f, 6, 2);
         snake.update(dt);
         gameCam.update();
         renderer.setView(gameCam);
