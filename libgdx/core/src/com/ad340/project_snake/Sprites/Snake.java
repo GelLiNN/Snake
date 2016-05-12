@@ -7,12 +7,12 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.utils.ArrayMap;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-
-import javafx.util.Pair;
 
 /**
  * Created by MasterOfTheUniverse on 4/21/16.
@@ -73,7 +73,7 @@ public class Snake {
         SnakePiece newTail = new SnakePiece(world, addLocation, addVelocity);
 
         // Give it the tail's current pivots
-        newTail.pivots = new LinkedList<Pair<Vector2, Vector2>>(tail.pivots);
+        newTail.pivots = new LinkedList<ArrayMap<Vector2, Vector2>>(tail.pivots);
 
         // Add it to the list of SnakePieces
         snakePieces.add(newTail);
@@ -143,7 +143,10 @@ public class Snake {
                     }
 
                     for (SnakePiece piece : snakePieces) {
-                        piece.pivots.add(new Pair(pivotPosition, pivotVelocity));
+                        ArrayMap<Vector2, Vector2> newPivot =
+                                new ArrayMap(1);
+                        newPivot.put(pivotPosition, pivotVelocity);
+                        piece.pivots.add(newPivot);
                     }
                 }
             }
@@ -166,7 +169,10 @@ public class Snake {
                     }
 
                     for (SnakePiece piece : snakePieces) {
-                        piece.pivots.add(new Pair(pivotPosition, pivotVelocity));
+                        ArrayMap<Vector2, Vector2> newPivot =
+                                new ArrayMap(1);
+                        newPivot.put(pivotPosition, pivotVelocity);
+                        piece.pivots.add(newPivot);
                     }
                 }
             }
@@ -189,7 +195,10 @@ public class Snake {
                     }
 
                     for (SnakePiece piece : snakePieces) {
-                        piece.pivots.add(new Pair(pivotPosition, pivotVelocity));
+                        ArrayMap<Vector2, Vector2> newPivot =
+                                new ArrayMap(1);
+                        newPivot.put(pivotPosition, pivotVelocity);
+                        piece.pivots.add(newPivot);
                     }
                 }
             }
@@ -212,7 +221,10 @@ public class Snake {
                     }
 
                     for (SnakePiece piece : snakePieces) {
-                        piece.pivots.add(new Pair(pivotPosition, pivotVelocity));
+                        ArrayMap<Vector2, Vector2> newPivot =
+                                new ArrayMap(1);
+                        newPivot.put(pivotPosition, pivotVelocity);
+                        piece.pivots.add(newPivot);
                     }
                 }
             }

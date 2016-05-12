@@ -37,7 +37,6 @@ public class Hud implements Disposable {
 
         // create score label
         scoreLabel = new Label("Score: " + String.format("%06d", score), new Label.LabelStyle(new BitmapFont(), Color.FIREBRICK));
-
         // add score label to table
         table.add(scoreLabel).expandX().padTop(10);
 

@@ -9,11 +9,10 @@ import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.utils.ArrayMap;
 
 import java.util.LinkedList;
 import java.util.Queue;
-
-import javafx.util.Pair;
 
 /**
  * Created by MasterOfTheUniverse on 5/4/16.
@@ -24,7 +23,7 @@ public class SnakePiece extends Sprite {
     public static final int SNAKE_FIXTURE_RADIUS = 10;
 
     // movement data
-    Queue<Pair<Vector2, Vector2>> pivots; // position, velocity
+    Queue<ArrayMap<Vector2, Vector2>> pivots; // position, velocity
 
     // other snake data
     public World world;
@@ -38,7 +37,7 @@ public class SnakePiece extends Sprite {
      */
     public SnakePiece(World world, Vector2 position, Vector2 velocity) {
         super(new Texture("snake-sprite.png"));
-        pivots = new LinkedList<Pair<Vector2, Vector2>>();
+        pivots = new LinkedList<ArrayMap<Vector2, Vector2>>();
         this.world = world;
         defineSnakePiece(position, velocity);
         setBounds(0, 0, 32 / ProjectSnake.PPM, 32 / ProjectSnake.PPM);
@@ -58,13 +57,13 @@ public class SnakePiece extends Sprite {
         // check pivots to turn the SnakePiece
         if (!pivots.isEmpty()) {
             Vector2 thisPos = new Vector2(thisPosX * ProjectSnake.PPM, thisPosY * ProjectSnake.PPM);
-            Pair<Vector2, Vector2> nextPivot = pivots.peek();
+            ArrayMap<Vector2, Vector2> nextPivot = pivots.peek();
 
-            if (nextPivot.getKey().epsilonEquals(thisPos, 0.01f)) {
+            if (nextPivot.firstKey().epsilonEquals(thisPos, 0.01f)) {
                 // turn the SnakePiece
                 nextPivot = pivots.remove();
                 this.b2body.setLinearVelocity(0, 0);
-                this.b2body.applyLinearImpulse(nextPivot.getValue(), this.b2body.getWorldCenter(), true);
+                this.b2body.applyLinearImpulse(nextPivot.firstValue(), this.b2body.getWorldCenter(), true);
 
                 System.out.println("turned a piece");
             }
