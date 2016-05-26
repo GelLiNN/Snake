@@ -1,6 +1,6 @@
 package com.ad340.project_snake.Screens;
 
-import com.ad340.project_snake.Utils.ProjectSnake;
+import com.ad340.project_snake.ProjectSnake;
 import com.ad340.project_snake.Scenes.Hud;
 import com.ad340.project_snake.Sprites.FoodController;
 import com.ad340.project_snake.Sprites.Snake;

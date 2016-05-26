@@ -4,7 +4,6 @@ import android.os.Bundle;
 
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
-import com.ad340.project_snake.Utils.ProjectSnake;
 
 public class AndroidLauncher extends AndroidApplication {
 

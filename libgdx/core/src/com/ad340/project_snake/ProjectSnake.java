@@ -1,4 +1,4 @@
-package com.ad340.project_snake.Utils;
+package com.ad340.project_snake;
 
 import com.ad340.project_snake.Screens.MainMenuScreen;
 import com.badlogic.gdx.Game;

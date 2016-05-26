@@ -1,6 +1,6 @@
 package com.ad340.project_snake.Scenes;
 
-import com.ad340.project_snake.Utils.ProjectSnake;
+import com.ad340.project_snake.ProjectSnake;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;

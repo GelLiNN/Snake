@@ -1,4 +1,4 @@
-package com.ad340.project_snake;
+package com.ad340.project_snake.Utils;
 import com.badlogic.gdx.input.GestureDetector;
 
 /**

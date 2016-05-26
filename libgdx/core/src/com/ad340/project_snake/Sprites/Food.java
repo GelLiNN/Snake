@@ -1,5 +1,6 @@
 package com.ad340.project_snake.Sprites;
 
+import com.ad340.project_snake.ProjectSnake;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -19,9 +20,10 @@ public class Food extends InteractiveTileObject {
      * @param bounds
      */
     public Food(World world, TiledMap map, Rectangle bounds) {
-        super(new Texture("food-sprite.png"), world, map, bounds);
+        super(new Texture("food-sprite.png"), world, bounds);
         fixture.setUserData(this);
         fixture.setSensor(true);
+        setBounds(0, 0, 32 / ProjectSnake.PPM, 32 / ProjectSnake.PPM);
     }
 
     @Override

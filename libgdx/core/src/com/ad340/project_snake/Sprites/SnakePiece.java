@@ -1,6 +1,6 @@
 package com.ad340.project_snake.Sprites;
 
-import com.ad340.project_snake.Utils.ProjectSnake;
+import com.ad340.project_snake.ProjectSnake;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;

@@ -11,7 +11,7 @@ import com.badlogic.gdx.physics.box2d.World;
 public class FoodController {
 
     // constants
-    private static final float FOOD_SIZE = 10;
+    private static final float FOOD_SIZE = 20;
 
     // state
     private World world;
@@ -33,7 +33,7 @@ public class FoodController {
     }
 
     private void findNewBounds() {
-        bounds = new Rectangle(190, 600, FOOD_SIZE / 100f, FOOD_SIZE / 100f);
+        bounds = new Rectangle(190, 600, FOOD_SIZE, FOOD_SIZE);
     }
 
     /**
@@ -44,6 +44,11 @@ public class FoodController {
         if (!foodIsPresent) {
             addNewFood();
         }
+
+        // set the sprite to the position of the box2d body
+        float thisPosX = food.b2body.getWorldCenter().x,
+              thisPosY = food.b2body.getWorldCenter().y;
+        food.setPosition(thisPosX - food.getWidth() / 2, thisPosY - food.getHeight() / 2);
     }
 
     /**

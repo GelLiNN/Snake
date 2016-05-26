@@ -1,7 +1,6 @@
 package com.ad340.project_snake.Sprites;
 
 import com.ad340.project_snake.Screens.PlayScreen;
-import com.ad340.project_snake.Utils.ProjectSnake;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -17,11 +16,10 @@ public class Boundary extends InteractiveTileObject {
     /**
      * Boundary constructor
      * @param world
-     * @param map
      * @param bounds
      */
-    public Boundary(World world, TiledMap map, Rectangle bounds) {
-        super(new Texture("transparent.png"), world, map, bounds);
+    public Boundary(World world, Rectangle bounds) {
+        super(new Texture("snake-sprite.png"), world, bounds);
         fixture.setUserData(this);
     }
 

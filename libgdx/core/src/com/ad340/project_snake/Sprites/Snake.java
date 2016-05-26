@@ -1,7 +1,7 @@
 package com.ad340.project_snake.Sprites;
 
-import com.ad340.project_snake.Utils.ProjectSnake;
-import com.ad340.project_snake.SwipeGestureDetector;
+import com.ad340.project_snake.ProjectSnake;
+import com.ad340.project_snake.Utils.SwipeGestureDetector;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
