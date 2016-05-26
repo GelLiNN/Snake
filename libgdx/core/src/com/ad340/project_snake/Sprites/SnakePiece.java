@@ -1,6 +1,7 @@
 package com.ad340.project_snake.Sprites;
 
-import com.ad340.project_snake.ProjectSnake;
+import com.ad340.project_snake.Utils.ProjectSnake;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
@@ -35,12 +36,16 @@ public class SnakePiece extends Sprite {
      * @param position to place this SnakePiece
      * @param velocity to give this SnakePiece when it spawns
      */
-    public SnakePiece(World world, Vector2 position, Vector2 velocity) {
+    public SnakePiece(World world, Vector2 position, Vector2 velocity, boolean isHead) {
         super(new Texture("snake-sprite.png"));
         pivots = new LinkedList<ArrayMap<Vector2, Vector2>>();
         this.world = world;
-        defineSnakePiece(position, velocity);
+        defineSnakePiece(position, velocity, isHead);
         setBounds(0, 0, 32 / ProjectSnake.PPM, 32 / ProjectSnake.PPM);
+    }
+
+    public void onHit() {
+        Gdx.app.log("Snake piece", "Collision");
     }
 
     /**
@@ -75,11 +80,11 @@ public class SnakePiece extends Sprite {
      * @param position
      * @param velocity
      */
-    public void defineSnakePiece(Vector2 position, Vector2 velocity) {
+    public void defineSnakePiece(Vector2 position, Vector2 velocity, boolean isHead) {
         // create a body definition for box2d
         BodyDef bdef = new BodyDef();
-        bdef.position.set(position.x / ProjectSnake.PPM, position.y / ProjectSnake.PPM);
         bdef.type = BodyDef.BodyType.DynamicBody;
+        bdef.position.set(position.x / ProjectSnake.PPM, position.y / ProjectSnake.PPM);
         this.b2body = world.createBody(bdef);
 
         // create a fixture definition for box2d
@@ -87,7 +92,8 @@ public class SnakePiece extends Sprite {
         CircleShape shape = new CircleShape();
         shape.setRadius(SNAKE_FIXTURE_RADIUS / ProjectSnake.PPM);
         fdef.shape = shape;
-        this.b2body.createFixture(fdef);
+        String data = isHead ? "head" : "body";
+        this.b2body.createFixture(fdef).setUserData(data);
 
         // start moving the piece
         this.b2body.applyLinearImpulse(velocity, this.b2body.getWorldCenter(), true);

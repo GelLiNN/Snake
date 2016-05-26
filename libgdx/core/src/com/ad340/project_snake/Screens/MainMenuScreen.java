@@ -1,6 +1,6 @@
 package com.ad340.project_snake.Screens;
 
-import com.ad340.project_snake.ProjectSnake;
+import com.ad340.project_snake.Utils.ProjectSnake;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;

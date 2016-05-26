@@ -1,6 +1,6 @@
 package com.ad340.project_snake.Sprites;
 
-import com.ad340.project_snake.ProjectSnake;
+import com.ad340.project_snake.Utils.ProjectSnake;
 import com.ad340.project_snake.SwipeGestureDetector;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -8,8 +8,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.ArrayMap;
-
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -23,6 +21,7 @@ public class Snake {
     public static final float SNAKE_SPEED = 3f;
     public static final Vector2 STARTING_POS = new Vector2(200, 200); // x, y
     public static final Vector2 STARTING_VEL = new Vector2(0, SNAKE_SPEED); // x-vel, y-vel
+    public static final boolean isHead = true;
 
     // snake state
     private World world;
@@ -42,7 +41,7 @@ public class Snake {
         this.world = world;
 
         // setup the snake
-        head = new SnakePiece(world, STARTING_POS, STARTING_VEL);
+        head = new SnakePiece(world, STARTING_POS, STARTING_VEL, isHead);
         tail = head;
         snakePieces = new ArrayList<SnakePiece>();
         snakePieces.add(head);
@@ -70,7 +69,7 @@ public class Snake {
         }
 
         // create a new SnakePiece
-        SnakePiece newTail = new SnakePiece(world, addLocation, addVelocity);
+        SnakePiece newTail = new SnakePiece(world, addLocation, addVelocity, !isHead);
 
         // Give it the tail's current pivots
         newTail.pivots = new LinkedList<ArrayMap<Vector2, Vector2>>(tail.pivots);
@@ -136,18 +135,14 @@ public class Snake {
 
                 // make sure the snake isn't moving up or down
                 if (headVel.y == 0) {
+                    // adjust pivot position for next frame
                     if (headVel.x > 0) {
                         pivotPosition.x += 5;
                     } else {
                         pivotPosition.x -= 5;
                     }
 
-                    for (SnakePiece piece : snakePieces) {
-                        ArrayMap<Vector2, Vector2> newPivot =
-                                new ArrayMap(1);
-                        newPivot.put(pivotPosition, pivotVelocity);
-                        piece.pivots.add(newPivot);
-                    }
+                    setPivots(pivotPosition, pivotVelocity);
                 }
             }
 
@@ -162,18 +157,14 @@ public class Snake {
 
                 // make sure the snake isn't moving right or left
                 if (headVel.x == 0) {
+                    // adjust pivot position for next frame
                     if (headVel.y > 0) {
                         pivotPosition.y += 5;
                     } else {
                         pivotPosition.y -= 5;
                     }
 
-                    for (SnakePiece piece : snakePieces) {
-                        ArrayMap<Vector2, Vector2> newPivot =
-                                new ArrayMap(1);
-                        newPivot.put(pivotPosition, pivotVelocity);
-                        piece.pivots.add(newPivot);
-                    }
+                    setPivots(pivotPosition, pivotVelocity);
                 }
             }
 
@@ -188,18 +179,14 @@ public class Snake {
 
                 // make sure the snake isn't moving right or left
                 if (headVel.x == 0) {
+                    // adjust pivot position for next frame
                     if (headVel.y > 0) {
                         pivotPosition.y += 5;
                     } else {
                         pivotPosition.y -= 5;
                     }
 
-                    for (SnakePiece piece : snakePieces) {
-                        ArrayMap<Vector2, Vector2> newPivot =
-                                new ArrayMap(1);
-                        newPivot.put(pivotPosition, pivotVelocity);
-                        piece.pivots.add(newPivot);
-                    }
+                    setPivots(pivotPosition, pivotVelocity);
                 }
             }
 
@@ -214,18 +201,23 @@ public class Snake {
 
                 // make sure the snake isn't moving up or down
                 if (headVel.y == 0) {
+                    // adjust pivot position for next frame
                     if (headVel.x > 0) {
                         pivotPosition.x += 5;
                     } else {
                         pivotPosition.x -= 5;
                     }
 
-                    for (SnakePiece piece : snakePieces) {
-                        ArrayMap<Vector2, Vector2> newPivot =
-                                new ArrayMap(1);
-                        newPivot.put(pivotPosition, pivotVelocity);
-                        piece.pivots.add(newPivot);
-                    }
+                    setPivots(pivotPosition, pivotVelocity);
+                }
+            }
+
+            public void setPivots(Vector2 pivotPosition, Vector2 pivotVelocity) {
+                for (SnakePiece piece : snakePieces) {
+                    ArrayMap<Vector2, Vector2> newPivot =
+                            new ArrayMap(1);
+                    newPivot.put(pivotPosition, pivotVelocity);
+                    piece.pivots.add(newPivot);
                 }
             }
         }));

@@ -1,10 +1,11 @@
 package com.ad340.project_snake.Screens;
 
-import com.ad340.project_snake.ProjectSnake;
+import com.ad340.project_snake.Utils.ProjectSnake;
 import com.ad340.project_snake.Scenes.Hud;
-import com.ad340.project_snake.Sprites.Food;
+import com.ad340.project_snake.Sprites.FoodController;
 import com.ad340.project_snake.Sprites.Snake;
 import com.ad340.project_snake.Utils.B2WorldCreator;
+import com.ad340.project_snake.Utils.WorldContactListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
@@ -15,7 +16,6 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
@@ -47,9 +47,12 @@ public class PlayScreen implements Screen {
     private Snake snake;
 
     // Food
-    private Food food;
-    boolean isFoodPresent;
+    private FoodController foodControl;
 
+    /**
+     * PlayScreen constructor
+     * @param game
+     */
     public PlayScreen(ProjectSnake game) {
         this.game = game;
 
@@ -72,30 +75,34 @@ public class PlayScreen implements Screen {
 
         new B2WorldCreator(world, map);
 
-        // define the snake and add to the world
+        // define the snake and add it to the world
         snake = new Snake(world);
+
+        // define the food controller and add it to the world
+        foodControl = new FoodController(world, map);
+
+        // setup world contact listener
+        world.setContactListener(new WorldContactListener());
     }
 
-    @Override
-    public void show () {
-
+    /**
+     * This will handle losing the game and changing screens.
+     */
+    public void loseGame() {
+        // TODO: something
+        System.out.println("You lose!");
     }
 
-    public void handleInput(float dt) {
-        if (Gdx.input.justTouched()) {
-            snake.addToSnake();
-        }
-    }
-
+    /**
+     * Updates the game every dt amount of time
+     * @param dt time between updates
+     */
     public void update(float dt) {
-        // handle user input first
-        handleInput(dt);
-
         world.step(1 / 60f, 6, 2);
         snake.update(dt);
+        foodControl.update(dt);
         gameCam.update();
         renderer.setView(gameCam);
-
     }
 
     @Override
@@ -110,15 +117,16 @@ public class PlayScreen implements Screen {
         // render our game map
         renderer.render();
 
-        //gives us box2d debug lines
+        // gives us box2d debug lines
         b2dr.render(world, gameCam.combined);
 
         game.batch.setProjectionMatrix(gameCam.combined);
         game.batch.begin();
         snake.draw(game.batch);
+        foodControl.draw(game.batch);
         game.batch.end();
 
-        //set our batch to draw what the Hud camera sees
+        // set our batch to draw what the Hud camera sees
         game.batch.setProjectionMatrix(hud.stage.getCamera().combined);
         hud.stage.draw();
     }
@@ -128,21 +136,9 @@ public class PlayScreen implements Screen {
         gamePort.update(width, height);
     }
 
-    @Override
-    public void pause() {
-
-    }
-
-    @Override
-    public void resume() {
-
-    }
-
-    @Override
-    public void hide() {
-
-    }
-
+    /**
+     * Disposes of everything
+     */
     @Override
     public void dispose() {
         world.dispose();
@@ -151,4 +147,16 @@ public class PlayScreen implements Screen {
         b2dr.dispose();
         hud.dispose();
     }
+
+    @Override
+    public void pause() {}
+
+    @Override
+    public void resume() {}
+
+    @Override
+    public void show () {}
+
+    @Override
+    public void hide() {}
 }

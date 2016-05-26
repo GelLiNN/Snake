@@ -1,7 +1,6 @@
 package com.ad340.project_snake.Utils;
 
 import com.ad340.project_snake.Sprites.Boundary;
-import com.ad340.project_snake.Sprites.Food;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
