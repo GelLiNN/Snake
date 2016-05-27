@@ -79,7 +79,7 @@ public class PlayScreen implements Screen {
         snake = new Snake(world);
 
         // define the food controller and add it to the world
-        foodControl = new FoodController(world, map);
+        foodControl = new FoodController(world, map, snake);
 
         // setup world contact listener
         world.setContactListener(new WorldContactListener());

@@ -16,6 +16,7 @@ import java.util.List;
  * Created by MasterOfTheUniverse on 4/21/16.
  */
 public class Snake {
+    public enum Swipe { UP, RIGHT, DOWN, LEFT };
 
     // constants
     public static final float SNAKE_SPEED = 3f;
@@ -28,6 +29,7 @@ public class Snake {
     private SnakePiece head; // points to the head
     private SnakePiece tail; // points to the tail
     private List<SnakePiece> snakePieces;
+    private int snakeSize;
 
     // add data
     Vector2 addLocation;
@@ -45,6 +47,7 @@ public class Snake {
         tail = head;
         snakePieces = new ArrayList<SnakePiece>();
         snakePieces.add(head);
+        snakeSize = 1;
 
         // setup swipe gestures
         setupGestures();
@@ -80,6 +83,9 @@ public class Snake {
         // Set it as the new Tail
         tail = newTail;
 
+        // Update snake size
+        snakeSize++;
+
         System.out.println("Added to snake");
     }
 
@@ -91,6 +97,14 @@ public class Snake {
               y = tail.b2body.getWorldCenter().y * ProjectSnake.PPM;
         addLocation = new Vector2(x, y);
         addVelocity = new Vector2(tail.b2body.getLinearVelocity());
+    }
+
+    public int getSize() {
+        return snakeSize;
+    }
+
+    public List<SnakePiece> getSnakePieces() {
+        return snakePieces;
     }
 
     /**
@@ -121,94 +135,82 @@ public class Snake {
      * Sets up swipe guestures for changing snake directions
      */
     public void setupGestures() {
+
         // setup swipe gestures
         Gdx.input.setInputProcessor(new SwipeGestureDetector(new SwipeGestureDetector.DirectionListener() {
 
             @Override
             public void onUp() {
-                float x = head.b2body.getWorldCenter().x * ProjectSnake.PPM,
-                      y = head.b2body.getWorldCenter().y * ProjectSnake.PPM;
-                Vector2 pivotPosition = new Vector2(x, y);
-                Vector2 pivotVelocity = new Vector2(0, SNAKE_SPEED);
-
-                Vector2 headVel = head.b2body.getLinearVelocity();
-
-                // make sure the snake isn't moving up or down
-                if (headVel.y == 0) {
-                    // adjust pivot position for next frame
-                    if (headVel.x > 0) {
-                        pivotPosition.x += 5;
-                    } else {
-                        pivotPosition.x -= 5;
-                    }
-
-                    setPivots(pivotPosition, pivotVelocity);
-                }
+                turnSnake(Swipe.UP);
             }
 
             @Override
             public void onRight() {
-                float x = head.b2body.getWorldCenter().x * ProjectSnake.PPM,
-                      y = head.b2body.getWorldCenter().y * ProjectSnake.PPM;
-                Vector2 pivotPosition = new Vector2(x, y);
-                Vector2 pivotVelocity = new Vector2(SNAKE_SPEED, 0);
-
-                Vector2 headVel = head.b2body.getLinearVelocity();
-
-                // make sure the snake isn't moving right or left
-                if (headVel.x == 0) {
-                    // adjust pivot position for next frame
-                    if (headVel.y > 0) {
-                        pivotPosition.y += 5;
-                    } else {
-                        pivotPosition.y -= 5;
-                    }
-
-                    setPivots(pivotPosition, pivotVelocity);
-                }
-            }
-
-            @Override
-            public void onLeft() {
-                float x = head.b2body.getWorldCenter().x * ProjectSnake.PPM,
-                      y = head.b2body.getWorldCenter().y * ProjectSnake.PPM;
-                Vector2 pivotPosition = new Vector2(x, y);
-                Vector2 pivotVelocity = new Vector2(-1 * SNAKE_SPEED, 0);
-
-                Vector2 headVel = head.b2body.getLinearVelocity();
-
-                // make sure the snake isn't moving right or left
-                if (headVel.x == 0) {
-                    // adjust pivot position for next frame
-                    if (headVel.y > 0) {
-                        pivotPosition.y += 5;
-                    } else {
-                        pivotPosition.y -= 5;
-                    }
-
-                    setPivots(pivotPosition, pivotVelocity);
-                }
+                turnSnake(Swipe.RIGHT);
             }
 
             @Override
             public void onDown() {
-                float x = head.b2body.getWorldCenter().x * ProjectSnake.PPM,
-                      y = head.b2body.getWorldCenter().y * ProjectSnake.PPM;
-                Vector2 pivotPosition = new Vector2(x, y);
-                Vector2 pivotVelocity = new Vector2(0, -1 * SNAKE_SPEED);
+                turnSnake(Swipe.DOWN);
+            }
 
+            @Override
+            public void onLeft() {
+                turnSnake(Swipe.LEFT);
+            }
+
+            public void turnSnake(Swipe direction) {
                 Vector2 headVel = head.b2body.getLinearVelocity();
 
-                // make sure the snake isn't moving up or down
-                if (headVel.y == 0) {
-                    // adjust pivot position for next frame
-                    if (headVel.x > 0) {
-                        pivotPosition.x += 5;
-                    } else {
-                        pivotPosition.x -= 5;
-                    }
+                // get the pivot position
+                float x = head.b2body.getWorldCenter().x * ProjectSnake.PPM,
+                        y = head.b2body.getWorldCenter().y * ProjectSnake.PPM;
+                Vector2 pivotPosition = new Vector2(x, y);
 
-                    setPivots(pivotPosition, pivotVelocity);
+                // turn up or down
+                if (direction == Swipe.UP || direction == Swipe.DOWN) {
+                    // make sure the snake isn't moving up or down
+                    if  (headVel.y == 0) {
+                        // adjust the pivot position for next frame
+                        if (headVel.x > 0) {
+                            pivotPosition.x += 5;
+                        } else {
+                            pivotPosition.x -= 5;
+                        }
+
+                        // get the pivot velocity
+                        Vector2 pivotVelocity;
+                        if (direction == Swipe.UP) {
+                            pivotVelocity = new Vector2(0, SNAKE_SPEED);
+                        } else {
+                            pivotVelocity = new Vector2(0, -1 * SNAKE_SPEED);
+                        }
+
+                        setPivots(pivotPosition, pivotVelocity);
+                    }
+                }
+
+                // turn right or left
+                if (direction == Swipe.RIGHT || direction == Swipe.LEFT) {
+                    // make sure the snake isn't moving right or left
+                    if (headVel.x == 0) {
+                        // adjust the pivot position for next frame
+                        if (headVel.y > 0) {
+                            pivotPosition.y += 5;
+                        } else {
+                            pivotPosition.y -= 5;
+                        }
+
+                        // get the pivot velocity
+                        Vector2 pivotVelocity;
+                        if (direction == Swipe.RIGHT) {
+                            pivotVelocity = new Vector2(SNAKE_SPEED, 0);
+                        } else {
+                            pivotVelocity = new Vector2(-1 * SNAKE_SPEED, 0);
+                        }
+
+                        setPivots(pivotPosition, pivotVelocity);
+                    }
                 }
             }
 

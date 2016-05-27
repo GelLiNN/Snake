@@ -92,6 +92,9 @@ public class SnakePiece extends Sprite {
         CircleShape shape = new CircleShape();
         shape.setRadius(SNAKE_FIXTURE_RADIUS / ProjectSnake.PPM);
         fdef.shape = shape;
+        fdef.filter.categoryBits = ProjectSnake.SNAKE_BIT;
+        fdef.filter.maskBits = ProjectSnake.DEFAULT_BIT | ProjectSnake.SNAKE_BIT
+                             | ProjectSnake.BOUNDARY_BIT | ProjectSnake.FOOD_BIT;
         String data = isHead ? "head" : "body";
         this.b2body.createFixture(fdef).setUserData(data);
 

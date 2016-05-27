@@ -19,9 +19,9 @@ public class Hud implements Disposable {
     public Stage stage;
     private Viewport viewport;
 
-    private Integer score;
+    private static Integer score;
 
-    Label scoreLabel;
+    private static Label scoreLabel;
 
     public Hud(SpriteBatch sb) {
         score = 0;
@@ -36,12 +36,17 @@ public class Hud implements Disposable {
         table.setFillParent(true); // makes the table the size of the stage
 
         // create score label
-        scoreLabel = new Label("Score: " + String.format("%06d", score), new Label.LabelStyle(new BitmapFont(), Color.FIREBRICK));
+        scoreLabel = new Label("Score: " + String.format("%06d", score), new Label.LabelStyle(new BitmapFont(), Color.WHITE));
         // add score label to table
         table.add(scoreLabel).expandX().padTop(10);
 
         // add table to the stage
         stage.addActor(table);
+    }
+
+    public static void addScore(int value) {
+        score += value;
+        scoreLabel.setText("Score: " + String.format("%06d", score));
     }
 
     @Override

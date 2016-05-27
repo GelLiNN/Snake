@@ -1,6 +1,6 @@
 package com.ad340.project_snake.Utils;
 
-import com.ad340.project_snake.Sprites.InteractiveTileObject;
+import com.ad340.project_snake.Sprites.InteractiveObject;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
@@ -23,7 +23,7 @@ public class WorldContactListener implements ContactListener {
 
             if (object.getUserData() instanceof Sprite) {
                 // object is a boundary, snake piece or food
-                ((InteractiveTileObject) object.getUserData()).onHit();
+                ((InteractiveObject) object.getUserData()).onHit();
             }
         }
     }
