@@ -7,6 +7,7 @@ import com.ad340.project_snake.Sprites.Snake;
 import com.ad340.project_snake.Utils.B2WorldCreator;
 import com.ad340.project_snake.Utils.WorldContactListener;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;

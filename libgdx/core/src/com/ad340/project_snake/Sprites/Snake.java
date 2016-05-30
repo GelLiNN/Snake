@@ -30,6 +30,7 @@ public class Snake {
     private SnakePiece tail; // points to the tail
     private List<SnakePiece> snakePieces;
     private int snakeSize;
+    private boolean needToAdd;
 
     // add data
     Vector2 addLocation;
@@ -48,6 +49,7 @@ public class Snake {
         snakePieces = new ArrayList<SnakePiece>();
         snakePieces.add(head);
         snakeSize = 1;
+        needToAdd = false;
 
         // setup swipe gestures
         setupGestures();
@@ -89,6 +91,10 @@ public class Snake {
         System.out.println("Added to snake");
     }
 
+    public void setAddStatus(boolean status) {
+        needToAdd = status;
+    }
+
     /**
      * Update location and velocity for new piece that's being spawned
      */
@@ -112,12 +118,15 @@ public class Snake {
      * @param dt
      */
     public void update(float dt) {
-        for (SnakePiece piece : snakePieces) {
-            piece.update(dt);
+        // add to the snake
+        if (needToAdd || Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
+            addToSnake();
+            setAddStatus(false);
         }
 
-        if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
-            addToSnake();
+        // move the snake
+        for (SnakePiece piece : snakePieces) {
+            piece.update(dt);
         }
     }
 
@@ -173,8 +182,10 @@ public class Snake {
                     if  (headVel.y == 0) {
                         // adjust the pivot position for next frame
                         if (headVel.x > 0) {
+                            // moving right, adjust right
                             pivotPosition.x += 5;
                         } else {
+                            // moving left, adjust left
                             pivotPosition.x -= 5;
                         }
 
@@ -196,8 +207,10 @@ public class Snake {
                     if (headVel.x == 0) {
                         // adjust the pivot position for next frame
                         if (headVel.y > 0) {
+                            // moving up, adjust up
                             pivotPosition.y += 5;
                         } else {
+                            // moving down, adjust down
                             pivotPosition.y -= 5;
                         }
 

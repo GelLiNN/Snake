@@ -77,7 +77,7 @@ public class FoodController {
     public void consumeFood() {
         food = null;
         foodIsPresent = false;
-        //snake.addToSnake();
+        snake.setAddStatus(true);
     }
 
     /**
