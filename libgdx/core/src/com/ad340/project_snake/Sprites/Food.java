@@ -1,7 +1,6 @@
 package com.ad340.project_snake.Sprites;
 
 import com.ad340.project_snake.ProjectSnake;
-import com.ad340.project_snake.Scenes.Hud;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
@@ -32,8 +31,6 @@ public class Food extends InteractiveObject {
     @Override
     public void onHit() {
         Gdx.app.log("Food", "Collision");
-        setCategoryFilter(ProjectSnake.DESTROYED_BIT);
         controller.consumeFood();
-        Hud.addScore(100);
     }
 }

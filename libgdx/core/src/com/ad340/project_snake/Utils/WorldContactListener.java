@@ -22,8 +22,11 @@ public class WorldContactListener implements ContactListener {
             Fixture object = head == fixA ? fixB : fixA;
 
             if (object.getUserData() instanceof Sprite) {
-                // object is a boundary, snake piece or food
+                // object is a boundary or food
                 ((InteractiveObject) object.getUserData()).onHit();
+            } else if (object.getUserData().equals("body")) {
+                // object is a snake piece
+
             }
         }
     }
