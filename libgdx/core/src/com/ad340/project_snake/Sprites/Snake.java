@@ -5,9 +5,14 @@ import com.ad340.project_snake.Utils.SwipeGestureDetector;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.maps.objects.RectangleMapObject;
+import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TiledMapTile;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.ArrayMap;
+
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -26,6 +31,7 @@ public class Snake {
 
     // snake state
     private World world;
+    private TiledMap map;
     private SnakePiece head; // points to the head
     private SnakePiece tail; // points to the tail
     private List<SnakePiece> snakePieces;
@@ -40,8 +46,9 @@ public class Snake {
      * Snake constructor
      * @param world to place the Snake in
      */
-    public Snake(World world) {
+    public Snake(World world, TiledMap map) {
         this.world = world;
+        this.map = map;
 
         // setup the snake
         head = new SnakePiece(world, STARTING_POS, STARTING_VEL, isHead);

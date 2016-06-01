@@ -77,7 +77,7 @@ public class PlayScreen implements Screen {
         new B2WorldCreator(world, map);
 
         // define the snake and add it to the world
-        snake = new Snake(world);
+        snake = new Snake(world, map);
 
         // define the food controller and add it to the world
         foodControl = new FoodController(world, map, snake);
@@ -119,9 +119,10 @@ public class PlayScreen implements Screen {
         renderer.render();
 
         // gives us box2d debug lines
-        b2dr.render(world, gameCam.combined);
+        //b2dr.render(world, gameCam.combined);
 
         game.batch.setProjectionMatrix(gameCam.combined);
+        game.batch.enableBlending();
         game.batch.begin();
         snake.draw(game.batch);
         foodControl.draw(game.batch);

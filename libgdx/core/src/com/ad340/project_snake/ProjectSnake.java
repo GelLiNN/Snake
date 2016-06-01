@@ -12,6 +12,7 @@ import com.ad340.project_snake.Screens.PlayScreen;
 public class ProjectSnake extends Game {
 
 	// Game constants
+	public static final String TITLE = "Snake";
 	public static final int V_WIDTH = 1080;
 	public static final int V_HEIGHT = 1920;
 	public static final int V_BORDER = 50;

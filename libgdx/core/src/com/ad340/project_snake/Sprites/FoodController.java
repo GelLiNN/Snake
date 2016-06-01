@@ -8,7 +8,6 @@ import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
 
 import java.util.ArrayList;
@@ -30,6 +29,9 @@ public class FoodController {
     private Food food;
     private boolean foodIsPresent;
     private boolean spriteIsSet;
+
+
+    int spawnCount = 0;
 
     public FoodController(World world, TiledMap map, Snake snake) {
         this.world = world;
@@ -63,9 +65,12 @@ public class FoodController {
             // make sure the food doesn't spawn on the snake
             List<SnakePiece> snakePieces = new ArrayList<SnakePiece>(snake.getSnakePieces());
             for (SnakePiece piece : snakePieces) {
-                Vector2 loc = new Vector2(piece.b2body.getWorldCenter().x, piece.b2body.getWorldCenter().y);
-                if (Math.abs(spawnX - (loc.x * ProjectSnake.PPM)) < 16
-                        && Math.abs(spawnY - (loc.y * ProjectSnake.PPM)) < 16) {
+                Rectangle bounds = piece.getBoundingRectangle();
+                // Scale the bounds
+                bounds.x *= ProjectSnake.PPM; bounds.y *= ProjectSnake.PPM;
+                bounds.width *= ProjectSnake.PPM; bounds.height *= ProjectSnake.PPM;
+                if (bounds.overlaps(spawnLoc)) {
+                    Gdx.app.log("Food", "Spawned in snake"); // testing
                     isValidLoc = false;
                     break;
                 }
